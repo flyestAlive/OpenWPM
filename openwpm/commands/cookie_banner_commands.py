@@ -1,4 +1,7 @@
 import logging
+
+from selenium.webdriver.common.by import By
+
 from selenium.webdriver import Firefox
 from openwpm.commands.types import BaseCommand
 from openwpm.config import BrowserParams, ManagerParams

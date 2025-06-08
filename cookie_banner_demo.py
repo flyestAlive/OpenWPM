@@ -1,8 +1,10 @@
 import argparse
 from pathlib import Path
+
 from typing import List, Literal
 
 from custom_command import LinkCountingCommand
+
 
 from openwpm.command_sequence import CommandSequence
 from openwpm.commands.browser_commands import GetCommand
@@ -32,6 +34,7 @@ def run(site: str, options: List[str], headless: bool) -> None:
         bp.dns_instrument = True
         bp.maximum_profile_size = 50 * (10 ** 20)
 
+
     manager_params.data_directory = Path("./datadir/")
     manager_params.log_path = Path("./datadir/openwpm.log")
 
@@ -53,6 +56,7 @@ def run(site: str, options: List[str], headless: bool) -> None:
             cs.append_command(LogCookieBannerOptionsCommand())
             cs.append_command(CookieBannerSelectionCommand(option))
             cs.append_command(LinkCountingCommand())
+
             manager.execute_command_sequence(cs)
 
 
