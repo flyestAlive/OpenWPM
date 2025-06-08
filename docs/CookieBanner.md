@@ -7,7 +7,11 @@ buttons by their visible text.
 
 `CookieBannerSelectionCommand` clicks a button whose text matches the provided string.
 `LogCookieBannerOptionsCommand` prints all detected option texts to the log which can be
-helpful when preparing your crawl.
+
+helpful when preparing your crawl.  The demo script enables the same instrumentation
+as `demo.py` (HTTP requests, cookies, navigation, JavaScript and DNS logging) so each
+consent choice produces a full crawl record.
+
 
 To run the demo:
 

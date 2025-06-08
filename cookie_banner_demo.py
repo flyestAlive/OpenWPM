@@ -1,6 +1,10 @@
 import argparse
 from pathlib import Path
-from typing import List
+
+from typing import List, Literal
+
+from custom_command import LinkCountingCommand
+
 
 from openwpm.command_sequence import CommandSequence
 from openwpm.commands.browser_commands import GetCommand
@@ -15,8 +19,21 @@ from openwpm.commands.cookie_banner_commands import (
 
 
 def run(site: str, options: List[str], headless: bool) -> None:
+    display_mode: Literal["native", "headless", "xvfb"] = "native"
+    if headless:
+        display_mode = "headless"
+
     manager_params = ManagerParams(num_browsers=1)
-    browser_params = [BrowserParams(display_mode="headless" if headless else "native")]
+    browser_params = [BrowserParams(display_mode=display_mode)]
+
+    for bp in browser_params:
+        bp.http_instrument = True
+        bp.cookie_instrument = True
+        bp.navigation_instrument = True
+        bp.js_instrument = True
+        bp.dns_instrument = True
+        bp.maximum_profile_size = 50 * (10 ** 20)
+
 
     manager_params.data_directory = Path("./datadir/")
     manager_params.log_path = Path("./datadir/openwpm.log")
@@ -28,10 +45,18 @@ def run(site: str, options: List[str], headless: bool) -> None:
         None,
     ) as manager:
         for idx, option in enumerate(options):
-            cs = CommandSequence(site, site_rank=idx)
-            cs.append_command(GetCommand(url=site, sleep=3))
+            def callback(success: bool, val: str = option) -> None:
+                print(
+                    f"CommandSequence for option '{val}' ran "
+                    f"{'successfully' if success else 'unsuccessfully'}"
+                )
+
+            cs = CommandSequence(site, site_rank=idx, callback=callback)
+            cs.append_command(GetCommand(url=site, sleep=3), timeout=60)
             cs.append_command(LogCookieBannerOptionsCommand())
             cs.append_command(CookieBannerSelectionCommand(option))
+            cs.append_command(LinkCountingCommand())
+
             manager.execute_command_sequence(cs)
 
 
