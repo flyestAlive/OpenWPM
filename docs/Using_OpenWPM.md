@@ -40,6 +40,8 @@ for _ in range(num_browsers):
 Please have a look at [`custom_command.py`](../custom_command.py). Note that custom commands must be
 defined in a separate module and imported. They can't be defined within the main crawl script.
 See [#837](https://github.com/openwpm/OpenWPM/issues/837).
+For an extended example that interacts with cookie consent banners see
+[`CookieBanner.md`](CookieBanner.md).
 
 ## Running a simple analysis
 
