@@ -6,13 +6,14 @@ options on a cookie banner at the start of each visit. The commands are implemen
 buttons by their visible text.
 
 `CookieBannerSelectionCommand` clicks a button whose text matches the provided string.
+`CookieBannerToggleCommand` clicks a checkbox or switch matching its label text.
 `LogCookieBannerOptionsCommand` prints all detected option texts to the log which can be
 helpful when preparing your crawl.
 
 To run the demo:
 
 ```bash
-python cookie_banner_demo.py https://example.com "Alle akzeptieren" "Nur funktional" --headless
+python cookie_banner_demo.py https://example.com "Alle akzeptieren" "Nur funktional" --toggle "Werbung" --toggle "Analyse" --headless
 ```
 
 This will visit `https://example.com` twice, once clicking the button with the text

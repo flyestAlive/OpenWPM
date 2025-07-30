@@ -6,6 +6,7 @@ from openwpm.command_sequence import CommandSequence
 from openwpm.commands.browser_commands import GetCommand
 from openwpm.commands.cookie_banner_commands import (
     CookieBannerSelectionCommand,
+    CookieBannerToggleCommand,
     LogCookieBannerOptionsCommand,
 )
 from openwpm.config import BrowserParams, ManagerParams
@@ -13,7 +14,7 @@ from openwpm.storage.sql_provider import SQLiteStorageProvider
 from openwpm.task_manager import TaskManager
 
 
-def run(site: str, options: List[str], headless: bool) -> None:
+def run(site: str, options: List[str], toggles: List[str], headless: bool) -> None:
     manager_params = ManagerParams(num_browsers=1)
     browser_params = [BrowserParams(display_mode="headless" if headless else "native")]
 
@@ -30,6 +31,8 @@ def run(site: str, options: List[str], headless: bool) -> None:
             cs = CommandSequence(site, site_rank=idx, reset=True)
             cs.append_command(GetCommand(url=site, sleep=3))
             cs.append_command(LogCookieBannerOptionsCommand())
+            for toggle in toggles:
+                cs.append_command(CookieBannerToggleCommand(toggle))
             cs.append_command(CookieBannerSelectionCommand(option))
             manager.execute_command_sequence(cs)
 
@@ -40,6 +43,13 @@ if __name__ == "__main__":
     )
     parser.add_argument("site", help="URL of the site to crawl")
     parser.add_argument("options", nargs="+", help="Button texts to select")
+    parser.add_argument(
+        "--toggle",
+        dest="toggles",
+        action="append",
+        default=[],
+        help="Label texts of checkboxes or switches to toggle before consenting",
+    )
     parser.add_argument("--headless", action="store_true", help="Run browser headless")
     args = parser.parse_args()
-    run(args.site, args.options, args.headless)
+    run(args.site, args.options, args.toggles, args.headless)
