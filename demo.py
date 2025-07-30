@@ -1,6 +1,8 @@
 import argparse
 from pathlib import Path
 from typing import Literal
+import multiprocessing
+import sys
 
 import tranco
 
@@ -10,6 +12,9 @@ from openwpm.commands.browser_commands import GetCommand
 from openwpm.config import BrowserParams, ManagerParams
 from openwpm.storage.sql_provider import SQLiteStorageProvider
 from openwpm.task_manager import TaskManager
+
+if sys.platform == "darwin":
+    multiprocessing.set_start_method("spawn", force=True)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--tranco", action="store_true", default=False)

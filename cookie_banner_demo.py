@@ -1,6 +1,8 @@
 import argparse
 from pathlib import Path
 from typing import List
+import multiprocessing
+import sys
 
 from openwpm.command_sequence import CommandSequence
 from openwpm.commands.browser_commands import GetCommand
@@ -11,6 +13,9 @@ from openwpm.commands.cookie_banner_commands import (
 from openwpm.config import BrowserParams, ManagerParams
 from openwpm.storage.sql_provider import SQLiteStorageProvider
 from openwpm.task_manager import TaskManager
+
+if sys.platform == "darwin":
+    multiprocessing.set_start_method("spawn", force=True)
 
 
 def run(site: str, options: List[str], headless: bool) -> None:

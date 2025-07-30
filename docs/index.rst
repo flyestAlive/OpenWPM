@@ -23,6 +23,8 @@ We're hoping to improve this setup in the future.
 
    Configuration
 
+   Troubleshooting
+
    Papers
 
 .. toctree::
