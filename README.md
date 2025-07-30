@@ -153,6 +153,19 @@ available.
     in bash). Please also add a comment to that issue to let us know you ran
     into this problem.
 
+7. On macOS you might see a crash mentioning `objc` and `initialize` when the
+    browser restarts. This happens because the default `fork` start method of
+    Python's multiprocessing does not work well with GUI frameworks on macOS.
+    Before running the demo, set the start method to `spawn` or run the demo via
+    Docker:
+
+    ```python
+    import multiprocessing
+    multiprocessing.set_start_method("spawn")
+    ```
+
+    See [docs/Troubleshooting.md](docs/Troubleshooting.md) for details.
+
 ## Documentation
 
 Further information is available at [OPENWPM's Documentation Page](https://openwpm.readthedocs.io).
