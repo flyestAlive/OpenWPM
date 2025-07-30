@@ -19,3 +19,6 @@ This will visit `https://example.com` twice, once clicking the button with the t
 `"Alle akzeptieren"` and once clicking `"Nur funktional"`. Each visit is stored in the
 result database like any other crawl allowing you to compare requests or loaded scripts
 for different consent choices.
+
+Each option is crawled in a fresh browser profile. This is achieved by creating the
+`CommandSequence` with `reset=True`, causing the browser to restart before every visit.
