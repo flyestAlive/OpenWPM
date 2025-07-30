@@ -4,14 +4,13 @@ from typing import List
 
 from openwpm.command_sequence import CommandSequence
 from openwpm.commands.browser_commands import GetCommand
-from openwpm.config import BrowserParams, ManagerParams
-from openwpm.storage.sql_provider import SQLiteStorageProvider
-from openwpm.task_manager import TaskManager
-
 from openwpm.commands.cookie_banner_commands import (
     CookieBannerSelectionCommand,
     LogCookieBannerOptionsCommand,
 )
+from openwpm.config import BrowserParams, ManagerParams
+from openwpm.storage.sql_provider import SQLiteStorageProvider
+from openwpm.task_manager import TaskManager
 
 
 def run(site: str, options: List[str], headless: bool) -> None:
@@ -28,7 +27,7 @@ def run(site: str, options: List[str], headless: bool) -> None:
         None,
     ) as manager:
         for idx, option in enumerate(options):
-            cs = CommandSequence(site, site_rank=idx)
+            cs = CommandSequence(site, site_rank=idx, reset=True)
             cs.append_command(GetCommand(url=site, sleep=3))
             cs.append_command(LogCookieBannerOptionsCommand())
             cs.append_command(CookieBannerSelectionCommand(option))
@@ -36,7 +35,9 @@ def run(site: str, options: List[str], headless: bool) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Crawl a site with different cookie banner selections")
+    parser = argparse.ArgumentParser(
+        description="Crawl a site with different cookie banner selections"
+    )
     parser.add_argument("site", help="URL of the site to crawl")
     parser.add_argument("options", nargs="+", help="Button texts to select")
     parser.add_argument("--headless", action="store_true", help="Run browser headless")
